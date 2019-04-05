@@ -1,0 +1,18 @@
+config:
+#  target: 'http://localhost:3000'
+  target: 'https://openreview.net'
+  phases:
+    - duration: 600
+      arrivalRate: 10
+      rampTo: 300
+  defaults:
+    headers:
+
+scenarios:
+  - flow:
+    - get:
+        url: "/groups?id=ICLR.cc/2017/conference"
+    - get:
+        url: "/notes?invitation=ICLR.cc/2017/conference/-/submission"
+    - get:
+        url: "/notes?invitation=ICLR.cc/2017/conference/paper.*/acceptance"

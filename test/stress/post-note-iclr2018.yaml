@@ -1,0 +1,61 @@
+config:
+  target: 'http://localhost:3000'
+#  target: 'https://openreview.net'
+#  target: 'http://dev.openreview.net'
+  phases:
+    - duration: 600
+      arrivalCount: 500
+  defaults:
+    headers:
+  processor: "./tools.js"
+
+scenarios:
+  - name: "Login and post a paper note"
+    flow:
+    - post:
+        beforeRequest: "buildTitle"
+        url: "/login"
+        json:
+          id: "melisabok@gmail.com"
+          password: "12345678"
+        capture:
+          json: "$.token"
+          as: "token"
+    - get:
+        url: "/notes?invitation=ICLR.cc/2018/Conference/-/Submission"
+        afterResponse: "logResponse"
+    - put:
+        url: "/pdf"
+        beforeRequest: "setFile"
+        capture:
+          json: "$.url"
+          as: "url"
+    - post:
+        url: "/notes"
+        headers:
+          Authorization: "Bearer {{ token }}"
+          User-Agent: "test-create-script"
+        json:
+          invitation: "ICLR.cc/2018/Conference/-/Submission"
+          readers: ["ICLR.cc/2018/Conference", "ICLR.cc/2018/Conference/Program_Chairs", "melisabok@gmail.com", "~Melisa_TestBok1"]
+          signatures: ["~Melisa_TestBok1"]
+          writers: []
+          content:
+            pdf: "{{ url }}"
+            title: "{{ title }}"
+            abstract: "Deep networks are successfully used as classification models yielding state-of- the-art results when trained on a large number of labeled samples. These models, however, are usually much less suited for semi-supervised problems because of their tendency to overfit easily when trained on small amounts of data. In this work we will explore a new training objective that is targeting a semi-supervised regime with only a small subset of labeled data. This criterion is based on a deep metric embedding over distance relations within the set of labeled samples, together with constraints over the embeddings of the unlabeled set. The final learned representations are discriminative in euclidean space, and hence can be used with subsequent nearest-neighbor classification using the labeled samples."
+            authors: ["Melisa Bok", "Michael Spector"]
+            authorids: ["mbok@cs.umass.edu", "spector@cs.umass.edu"]
+            keywords: ["Algorithms: Approximate Inference"]
+
+        capture:
+          json: "$.id"
+          as: "id"
+    - get:
+        url: "/notes?id={{ id }}"
+        capture:
+          json: "$.notes[0].original"
+          as: "original"
+        afterResponse: "logNote"
+    - get:
+        url: "/notes?original={{ original }}"

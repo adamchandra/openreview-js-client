@@ -1,0 +1,78 @@
+config:
+  target: 'http://localhost:3000'
+#  target: 'https://openreview.net'
+#  target: 'http://dev.openreview.net'
+  phases:
+    - duration: 498
+      arrivalCount: 498
+  defaults:
+    headers:
+  processor: "./tools.js"
+
+scenarios:
+  - name: "Register, login and post a paper note"
+    flow:
+    - get:
+        beforeRequest: "generateUserId"
+        url: "/groups?id=auai.org/UAI/2018"
+    - post:
+        url: "/register"
+        json:
+          email: "{{ userEmail }}"
+          password: "1234"
+          name:
+            first: "Test"
+            last: "{{ userLast }}"
+        capture:
+          json: "$.id"
+          as: "username"
+    - put:
+        url: "/activate/{{ userEmail }}"
+        json:
+          content:
+            names:
+              - first: "Test"
+                last: "{{ userLast }}"
+                username: "{{ username }}"
+            preferredEmail: "{{ userEmail }}"
+            emails: ["{{ userEmail }}"]
+        capture:
+          json: "$.token"
+          as: "token"
+    - post:
+        beforeRequest: "buildTitle"
+        url: "/login"
+        json:
+          id: "{{ userEmail }}"
+          password: "1234"
+        capture:
+          json: "$.token"
+          as: "token"
+    - get:
+        url: "/invitations?id=auai.org/UAI/2018/-/Submission"
+    - put:
+        url: "/pdf"
+        beforeRequest: "setFile"
+        capture:
+          json: "$.url"
+          as: "url"
+    - post:
+        url: "/notes"
+        headers:
+          Authorization: "Bearer {{ token }}"
+          User-Agent: "test-create-script"
+        json:
+          invitation: "auai.org/UAI/2018/-/Submission"
+          readers: ["auai.org/UAI/2018", "{{ userEmail }}", "{{ username }}"]
+          signatures: ["{{ username }}"]
+          writers: []
+          content:
+            pdf: "{{ url }}"
+            title: "{{ title }}"
+            abstract: "Deep networks are successfully used as classification models yielding state-of- the-art results when trained on a large number of labeled samples. These models, however, are usually much less suited for semi-supervised problems because of their tendency to overfit easily when trained on small amounts of data. In this work we will explore a new training objective that is targeting a semi-supervised regime with only a small subset of labeled data. This criterion is based on a deep metric embedding over distance relations within the set of labeled samples, together with constraints over the embeddings of the unlabeled set. The final learned representations are discriminative in euclidean space, and hence can be used with subsequent nearest-neighbor classification using the labeled samples."
+            authors: ["Test {{ userLast }}"]
+            authorids: ["{{ userEmail }}"]
+            subject_areas: ["Algorithms: Approximate Inference"]
+        capture:
+          json: "$.id"
+          as: "id"
