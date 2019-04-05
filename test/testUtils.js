@@ -3,124 +3,128 @@
 require('shelljs/global');
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var elasticsearch = require('elasticsearch');
-var crypto = require('crypto');
-var Shared = require('mmap-object');
+// var elasticsearch = require('elasticsearch');
+// var crypto = require('crypto');
+// var Shared = require('mmap-object');
 
-var mongoDatabase = require('../scripts/mongo_database.js');
+// var mongoDatabase = require('../scripts/mongo_database.js');
 
 chai.use(chaiHttp);
 
 process.env.NODE_ENV = 'test';
 
-var config = require('config-node')({
-  ext: 'json',
-  env: process.env.NODE_ENV
-});
+// var config = require('config-node')({
+//   ext: 'json',
+//   env: process.env.NODE_ENV
+// });
 
-var server = 'http://localhost:' + config.port;
-var superUser = config.superUser;
+const port = 3000;
+
+
+var server = `http://localhost:${port}`;
+var superUser = `~SuperUser1`;
 var testUser = 'test@test.com';
-var instanceServer;
-var esClient;
-if (config.useElasticSearch) {
-  esClient = new elasticsearch.Client({
-    host: config.elasticsearch.host,
-    log: 'info'
-  });
-}
+// var instanceServer;
 
-var createIndex = function() {
-  if (esClient) {
-    console.log('Create ES index');
-    return removeIndex()
-    .then(result => {
-      return esClient.indices.create({
-        index: config.elasticsearch.index,
-        body: {
-          mappings: {
-            doc: {
-              properties: {
-                invitation: {
-                  type: 'keyword'
-                },
-                readers: {
-                  type: 'keyword'
-                },
-                nonreaders: {
-                  type: 'keyword'
-                },
-                forum: {
-                  type: 'keyword'
-                },
-                id: {
-                  type: 'keyword'
-                },
-                original: {
-                  type: 'keyword'
-                },
-                replyto: {
-                  type: 'keyword'
-                }
-              }
-            }
-          }
-        }
-      });
-    });
+// var esClient;
+// if (config.useElasticSearch) {
+//   esClient = new elasticsearch.Client({
+//     host: config.elasticsearch.host,
+//     log: 'info'
+//   });
+// }
 
-  }
-  return Promise.resolve();
-};
+// var createIndex = function() {
+//   if (esClient) {
+//     console.log('Create ES index');
+//     return removeIndex()
+//     .then(result => {
+//       return esClient.indices.create({
+//         index: config.elasticsearch.index,
+//         body: {
+//           mappings: {
+//             doc: {
+//               properties: {
+//                 invitation: {
+//                   type: 'keyword'
+//                 },
+//                 readers: {
+//                   type: 'keyword'
+//                 },
+//                 nonreaders: {
+//                   type: 'keyword'
+//                 },
+//                 forum: {
+//                   type: 'keyword'
+//                 },
+//                 id: {
+//                   type: 'keyword'
+//                 },
+//                 original: {
+//                   type: 'keyword'
+//                 },
+//                 replyto: {
+//                   type: 'keyword'
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       });
+//     });
 
-var removeIndex = function() {
-  if (esClient) {
-    console.log('Remove ES index');
-    return esClient.indices.delete({
-      index: config.elasticsearch.index,
-      ignoreUnavailable: true
-    });
-  }
-  return Promise.resolve();
-};
+//   }
+//   return Promise.resolve();
+// };
 
-var setupDatabase = function() {
-  return mongoDatabase.setup(config);
-};
+// var removeIndex = function() {
+//   if (esClient) {
+//     console.log('Remove ES index');
+//     return esClient.indices.delete({
+//       index: config.elasticsearch.index,
+//       ignoreUnavailable: true
+//     });
+//   }
+//   return Promise.resolve();
+// };
 
-var startServer = function() {
-  console.log('Start server');
+// var setupDatabase = function() {
+//   return mongoDatabase.setup(config);
+// };
 
-  const sharedObject = new Shared.Create('./shared_keys');
-  if (!sharedObject.bearerSecret) {
-    sharedObject.bearerSecret = crypto.randomBytes(16).toString('hex');
-  }
-  sharedObject.close();
+// var startServer = function() {
+//   console.log('Start server');
 
-  return new Promise((resolve, reject) => {
-    require('../server')(expressServer => {
-      instanceServer = expressServer;
-      resolve();
-    });
-  });
-};
+//   const sharedObject = new Shared.Create('./shared_keys');
+//   if (!sharedObject.bearerSecret) {
+//     sharedObject.bearerSecret = crypto.randomBytes(16).toString('hex');
+//   }
+//   sharedObject.close();
 
-var stopServer = function() {
-  console.log('Stop server');
+//   return new Promise((resolve, reject) => {
+//     require('../server')(expressServer => {
+//       instanceServer = expressServer;
+//       resolve();
+//     });
+//   });
+// };
 
-  return new Promise((resolve, reject) => {
-    instanceServer.close();
+// var stopServer = function() {
+//   console.log('Stop server');
 
-    setTimeout(function(){
-      resolve();
-    }, 1000);
+//   return new Promise((resolve, reject) => {
+//     instanceServer.close();
 
-  });
-};
+//     setTimeout(function(){
+//       resolve();
+//     }, 1000);
 
-var dropGraph = function() {
-  return mongoDatabase.tearDown(config);
-};
+//   });
+// };
+
+// var dropGraph = function() {
+//   return mongoDatabase.tearDown(config);
+// };
 
 var createUserP = function(email, first, middle, last, password) {
   return chai.request(server)
@@ -361,12 +365,9 @@ var createTagInvitation = function(id, user, token, content, readers, multiReply
 };
 
 var setUp = function(done) {
-  setupDatabase()
-    .then(createIndex)
-    .then(startServer)
-    .then(res => createAndLoginUser(superUser, 'Super', 'User')
+  return createAndLoginUser(superUser, 'Super', 'User')
           .then(superToken => createAndLoginUser(testUser, 'Test', 'User')
-                .then(testToken => done(superToken, testToken))))
+                .then(testToken => done(superToken, testToken)))
     .catch(error => {
       console.error('setup error', error);
       done(error);
@@ -374,14 +375,15 @@ var setUp = function(done) {
 };
 
 var tearDown = function(done) {
-  stopServer()
-    .then(removeIndex)
-    .then(dropGraph)
-    .then(done)
-    .catch(error => {
-      console.error('tearDown error', error);
-      done(error);
-    });
+  return done();
+  // stopServer()
+  //   .then(removeIndex)
+  //   .then(dropGraph)
+  //   .then(done)
+  //   .catch(error => {
+  //     console.error('tearDown error', error);
+  //     done(error);
+  //   });
 };
 
 module.exports = {

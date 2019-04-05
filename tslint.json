@@ -1,0 +1,44 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint-config-airbnb",
+    "tslint-config-prettier"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*"
+    ]
+  },
+  "jsRules": {},
+  "rules": {
+    "object-literal-sort-keys": false,
+    "trailing-comma": [true, {"multiline": "ignore", "singleline": "never"}],
+    "no-consecutive-blank-lines": false,
+    "max-classes-per-file": false,
+    "ordered-imports": false,
+    "arrow-parens": false,
+    "interface-name": false,
+    "variable-name": [true,
+                      "ban-keywords",
+                      "check-format",
+                      "allow-leading-underscore"
+                     ],
+    "whitespace": [true,
+                   "check-branch",
+                   "check-decl",
+                   "check-separator",
+                   "check-rest-spread",
+                   "check-type",
+                   "check-typecast",
+                   "check-type-operator",
+                   "check-preblock"
+                  ],
+    "import-name": false,
+    "no-this-assignment": [true,
+                           { "allowed-names": ["^self$"],
+                             "allow-destructuring": true
+                           }]
+
+  },
+  "rulesDirectory": []
+}

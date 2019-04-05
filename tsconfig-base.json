@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
+
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+
+    "noEmit": true,
+
+    "strict": true,
+    "noImplicitReturns": true,
+
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+
+    "inlineSourceMap": true,
+    "preserveConstEnums": true,
+
+    "diagnostics": true,
+
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+
+
+}

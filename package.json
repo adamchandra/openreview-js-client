@@ -4,7 +4,7 @@
   "description": "REST client for interacting with OpenReview server, useable from node and browser",
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "test": "mocha mochaTest:test mocha:test"
   },
   "scripts": {
     "test": "test"
@@ -16,6 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "commander": "^2.20.0",
     "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "chai": "4.1.2",
+    "chai-http": "^4.0.0",
+    "hooker": "^0.2.3",
+    "mocha": "^5.2.0",
+    "shelljs": "^0.8.2"
   }
 }
