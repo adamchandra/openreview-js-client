@@ -1,0 +1,21 @@
+{
+  "name": "openreview-js-client",
+  "version": "0.0.1",
+  "description": "REST client for interacting with OpenReview server, useable from node and browser",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "openreview"
+  ],
+  "author": "Adam Saunders",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "lodash": "^4.17.11"
+  }
+}
