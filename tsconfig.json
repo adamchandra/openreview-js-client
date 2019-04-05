@@ -1,19 +1,44 @@
 {
-  "extends": "./tsconfig-base.json",
-
   "compilerOptions": {
-    "baseUrl": ".",
+
+    "target": "es5",
+    "module": "commonJs",
+    "moduleResolution": "node",
+
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
 
     "noEmit": false,
 
+    "strict": true,
+    "noImplicitReturns": true,
+
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+
+    "inlineSourceMap": true,
+    "preserveConstEnums": true,
+
+    "diagnostics": true,
+
+    "incremental": true,
+
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+
+    "baseUrl": ".",
+
     "types": [
-      "jest",
+      "node",
       "chai"
     ],
 
     "allowJs": true,
 
-    "declaration": true,
     "outDir": "./dist"
   },
 

@@ -62,12 +62,6 @@ node_modules
 *.pyc
 *.ipynb
 
-shared_keys
-artillery_report*.json
 
-pdfs
-docs/*.png
-docs/*.html
-docs/*.js
-docs/*.css
-docs/*.map
+
+/dist/

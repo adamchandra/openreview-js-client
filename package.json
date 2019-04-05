@@ -4,10 +4,10 @@
   "description": "REST client for interacting with OpenReview server, useable from node and browser",
   "main": "index.js",
   "directories": {
-    "test": "mocha mochaTest:test mocha:test"
   },
   "scripts": {
-    "test": "test"
+    "opr": "ts-node src/cli/opr.js",
+    "build": "tsc",
   },
   "keywords": [
     "openreview"
@@ -17,13 +17,18 @@
   "dependencies": {
     "axios": "^0.18.0",
     "commander": "^2.20.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.123",
+    "@types/node": "^11.13.0",
     "chai": "4.1.2",
     "chai-http": "^4.0.0",
     "hooker": "^0.2.3",
     "mocha": "^5.2.0",
-    "shelljs": "^0.8.2"
+    "shelljs": "^0.8.2",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.1"
   }
 }
