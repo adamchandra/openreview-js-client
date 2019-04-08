@@ -1,10 +1,7 @@
-
 import cmds from 'commander';
 import _ from 'lodash';
 
-
 cmds.parse(process.argv);
-
 
 console.log('hello, info');
 

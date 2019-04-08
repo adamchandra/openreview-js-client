@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
 
+    "baseUrl": ".",
+
     "target": "es5",
     "module": "commonJs",
     "moduleResolution": "node",
@@ -24,13 +26,14 @@
 
     "incremental": true,
 
+    "skipLibCheck": true,
+
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
 
-    "baseUrl": ".",
 
     "types": [
       "node",
