@@ -1,32 +1,57 @@
-//
 
-import cmds from 'commander';
-import _ from 'lodash';
+import _ from "lodash";
 
-cmds
-  .option('-l, --list <items>', 'A list')
-;
+import { RunState } from "../cli/state";
+import { configAxios } from ".";
 
-cmds.parse(process.argv);
+export interface Group {
+  _id: string;
 
-//   createSimpleRootGroupP('abc.com', { readers: ['everyone'] })
-//     .then(function() {
-//       return chai.request(server)
-//         .get('/groups?id=abc.com')
-//         .set('Authorization', 'Bearer ' + superToken)
-//         .set('User-Agent', 'test-create-script');
-//     })
-//     .then(function(res) {
-//       res.should.have.status(200);
-//       res.should.be.json;
-//       res.body.should.be.a('object');
-//       res.body.should.have.property('groups');
-//       res.body.groups.should.be.a('array');
-//       res.body.groups.length.should.equal(1);
-//       res.body.groups[0].should.have.property('tauthor');
-//       res.body.groups[0].tauthor.should.equal(superUser);
-//       return chai.request(server)
-//         .get('/groups?id=abc.com')
-//         .set('Authorization', 'Bearer ' + testToken)
-//         .set('User-Agent', 'test-create-script');
-//     })
+  id: string;
+  active: boolean;
+  emailable: boolean;
+  signatures: string[];
+  signatories: string[];
+  readers: string[];
+  writers: string[];
+  nonreaders: string[];
+  members: string[];
+
+  cdate: number;
+  ddate: number;
+  tmdate: number;
+  tddate: number;
+  tcdate: number;
+
+  tauthor: string;
+  web: string;
+}
+
+export async function listGroups(runState: RunState): Promise<void> {
+  console.log("listGroups");
+  const axios = configAxios(runState);
+
+  axios.get("/groups")
+    .then((r: any) => {
+      const groups = r.data.groups;
+      console.log("total #", groups.length);
+      const uniqKeys = _.uniq(
+        _.map(groups, (group: object) => {
+          const kvlist = _.map(_.toPairs(group), ([k, v]) => {
+            const vtype = typeof v;
+            if (k === "web" && v) {
+              console.log(k, v);
+            }
+            return `${k}: ${vtype}`;
+          });
+          // console.log(group);
+          return _.join(kvlist, "; ");
+        })
+      );
+
+      console.log(_.join(uniqKeys, "\n"));
+    })
+    .catch(err => {
+      console.log("error: listGroups", err);
+    });
+}

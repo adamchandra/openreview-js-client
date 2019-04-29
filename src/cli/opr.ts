@@ -1,38 +1,36 @@
-import cmds from 'commander';
-import _ from 'lodash';
+import _ from "lodash";
+
+import { doLogin } from "./opr-login";
 
 
-// import sh from 'shelljs';
-import fs from "fs-extra";
-import { readCreds } from '../api/login';
+import { program, enqueueCommand, runCommands } from ".";
 
-// look for auth info
-const authInfoFile = 'user-credentials.json';
-// const statEntry = fs.statSync(authInfoFile);
-const authInfoExists = fs.existsSync(authInfoFile);
+import "./opr-groups";
 
-if (!authInfoExists) {
-  console.log('no auth info');
+import { RunState } from "./state";
 
-  cmds
-    .command('info', 'show system information')
-    .command('login', 'login to server')
-  ;
 
-  cmds.parse(process.argv);
 
-} else {
-  const userCreds = readCreds();
-  console.log('authorized as:', userCreds.user.id);
-
-  cmds
-    .command('info', 'show system information')
-    .command('groups', 'login to server')
-  ;
-
-  cmds.parse(process.argv);
-
+export function debugLog(state: RunState): void {
+  const { logger, args, options } = state;
+  logger!.info(`echo: ${JSON.stringify(args)}, ${JSON.stringify(options)}`);
 }
 
+program
+  .command("echo", "echo a string")
+  .argument("<message>", "message to echo")
+  .action((a, o, l) => {
+    enqueueCommand(a, o, l, debugLog);
+  })
+;
 
-console.log('/done, everything');
+program
+  .command("login", "login to server")
+  .argument("[user]", "login specified user", /.*/, "OpenReview.net")
+  .action((a, o, l) => {
+    enqueueCommand(a, o, l, doLogin);
+  })
+;
+
+
+runCommands();

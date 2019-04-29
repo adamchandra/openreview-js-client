@@ -899,6 +899,7 @@ describe('Search', function () {
   });
 
   it('should delete the second sub note', function (done) {
+    // ACS: why is deleting a note done vis /post
 
     chai.request(server)
     .post('/notes')
@@ -934,6 +935,7 @@ describe('Search', function () {
   });
 
   it('should delete the forum that has sub notes', function (done) {
+    // ACS: I don't understand this forum deletion via post /notes
     var noteData;
     chai.request(server)
     .get('/notes?id=' + noteid)

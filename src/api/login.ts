@@ -1,8 +1,8 @@
 
 import axios, {
   // AxiosRequestConfig,
-  AxiosResponse,
-  AxiosError,
+  // AxiosResponse,
+  // AxiosError,
   // AxiosInstance,
   // AxiosAdapter,
   // Cancel,
@@ -11,8 +11,6 @@ import axios, {
   // Canceler
 } from 'axios';
 
-import fs from "fs-extra";
-
 export interface Profile {
   id: string;
   first: string;
@@ -20,6 +18,7 @@ export interface Profile {
   last: string;
   emails: string[];
 }
+
 export interface User {
   _id: string;
   id: string;
@@ -42,50 +41,17 @@ export interface User {
 export interface Credentials {
   token: string;
   user: User;
-
-}
-const handleResponse = (response: AxiosResponse) => {
-  console.log(response.status, response.statusText);
-  console.log(response.data);
-  // console.log(response.headers);
-  // console.log(response.config);
-};
-
-const handleError = (error: AxiosError) => {
-  if (error.response) {
-    console.log(error.response.data);
-    console.log(error.response.status);
-    console.log(error.response.headers);
-  } else {
-    console.log(error.message);
-  }
-};
-
-function writeCreds(credentials: Credentials) {
-  fs.writeJsonSync('./user-credentials.json', credentials);
 }
 
-export function readCreds(): Credentials {
-  const creds = fs.readJsonSync('./user-credentials.json');
-  return creds;
+
+export async function postLogin(id: string, password: string): Promise<Credentials> {
+  return axios
+    .post('http://localhost:3000/login', {id, password})
+    .then(r => r.data)
 }
 
-// axios(config)
-//   .then(handleResponse)
-//   .catch(handleError);
 
-export async function login(): Promise<void> {
 
-  const id = "OpenReview.net";
-  const password = "acoldwindydayinamherst";
-
-  return axios.post('http://localhost:3000/login', {id, password})
-    .then(r => { handleResponse(r); return r.data } )
-    .then(writeCreds)
-    .catch(handleError)
-  ;
-
-}
 
 // const config: AxiosRequestConfig = {
 //   // url: '/user',
@@ -120,3 +86,29 @@ export async function login(): Promise<void> {
 //   // },
 //   // cancelToken: new axios.CancelToken((_: Canceler) => {})
 // };
+
+// export const logResponse: ActionFunction<RunState, AxiosResponse> = (st: RunState, response: AxiosResponse) => {
+//   console.log(response.status, response.statusText);
+//   console.log(response.data);
+//   // console.log(response.headers);
+//   // console.log(response.config);
+//   return st;
+// };
+
+// export const logError: ActionFunction<RunState, AxiosError> = (st: RunState, error: AxiosError) => {
+//   if (error.response) {
+//     console.log(error.response.data);
+//     console.log(error.response.status);
+//     console.log(error.response.headers);
+//   } else {
+//     console.log(error.message);
+//   }
+//   return st;
+// };
+
+
+// axios(config)
+//   .then(handleResponse)
+//   .catch(handleError);
+
+// import { AsyncActionFunction } from '../cli'

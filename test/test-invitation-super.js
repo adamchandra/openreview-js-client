@@ -142,6 +142,7 @@ describe('InvitationSuper', function() {
 
   });
 
+  // ACS: why is the the invitation super field specified explicitly? isn't it just hierarchical, e.g., 'group/-/inv1/inv2/inv3' ?
   it('should create a child invitation with an invalid super and get a bad request', function(done) {
     chai.request(server)
       .post('/invitations')
@@ -167,6 +168,7 @@ describe('InvitationSuper', function() {
       })
   });
 
+  // ACS: super/sub invite fields have some overridable fields, others are immutable, correct?
   it('should create a super invitation, override a final value and get an error', function(done) {
     utils.createGroupP('workshop2', superUser, superToken, [superUser, user])
     .then(function(response) {

@@ -746,6 +746,8 @@ describe('Invitations', function() {
       });
   });
 
+  // ACS: what is invitation.reply.referenti?
+  // ACS: invitation format: groupname/-/forumid?
   it('should create an invitation with referenti and get an ok', function(done) {
     chai.request(server)
       .post('/invitations')

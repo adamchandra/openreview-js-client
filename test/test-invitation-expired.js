@@ -283,6 +283,7 @@ describe('InvitationExpired', function() {
       response.body.should.have.property('id');
       response.body.id.should.equal('rain/-/water');
       response.body.should.not.have.property('expdate');
+      // ACS: testUser is able to create note in response to an invitation for which they are a reader, then what is invitees used for?
       return chai.request(server)
         .post('/notes')
         .set('Authorization', 'Bearer ' + testToken)
@@ -330,6 +331,7 @@ describe('InvitationExpired', function() {
       response.body.should.have.property('id');
       response.body.id.should.equal('rain/-/water');
       response.body.should.have.property('expdate');
+      // ACS: is the inclusion of unchanging fields required, e.g., invitation, signatures, writer, etc. are same as original 
       return chai.request(server)
         .post('/notes')
         .set('Authorization', 'Bearer ' + testToken)

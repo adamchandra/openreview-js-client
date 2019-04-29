@@ -1,8 +1,7 @@
 {
   "defaultSeverity": "error",
   "extends": [
-    "tslint-config-airbnb",
-    "tslint-config-prettier"
+    "tslint:recommended"
   ],
   "linterOptions": {
     "exclude": [
@@ -11,6 +10,7 @@
   },
   "jsRules": {},
   "rules": {
+    "no-console": false,
     "object-literal-sort-keys": false,
     "trailing-comma": [true, {"multiline": "ignore", "singleline": "never"}],
     "no-consecutive-blank-lines": false,
