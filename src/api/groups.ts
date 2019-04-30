@@ -3,19 +3,23 @@ import _ from "lodash";
 
 import { RunState } from "../cli/state";
 import { configAxios } from ".";
+import { AxiosError } from "axios";
 
-export interface Group {
-  _id: string;
-
-  id: string;
-  active: boolean;
-  emailable: boolean;
+export interface GroupPermissions {
   signatures: string[];
   signatories: string[];
   readers: string[];
   writers: string[];
   nonreaders: string[];
   members: string[];
+}
+
+export interface Group extends GroupPermissions {
+  _id: string;
+
+  id: string;
+  active: boolean;
+  emailable: boolean;
 
   cdate: number;
   ddate: number;
@@ -27,8 +31,25 @@ export interface Group {
   web: string;
 }
 
+type CreatedGroup = any;
+
+export function createGroup(groupId: string, runState: RunState): Promise<CreatedGroup> {
+
+  return configAxios(runState)
+    .post("/groups", {
+      id: groupId
+    }).catch((error: AxiosError) => {
+      console.log(error.message);
+    });
+}
+
+export async function deleteGroup(runState: RunState): Promise<void> {
+}
+
+export async function showGroupTree(runState: RunState): Promise<void> {
+}
+
 export async function listGroups(runState: RunState): Promise<void> {
-  console.log("listGroups");
   const axios = configAxios(runState);
 
   axios.get("/groups")
@@ -40,7 +61,7 @@ export async function listGroups(runState: RunState): Promise<void> {
           const kvlist = _.map(_.toPairs(group), ([k, v]) => {
             const vtype = typeof v;
             if (k === "web" && v) {
-              console.log(k, v);
+              // console.log(k, v);
             }
             return `${k}: ${vtype}`;
           });

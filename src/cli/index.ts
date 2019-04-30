@@ -4,17 +4,17 @@ import _ from "lodash";
 import {
   CaporalLogger,
   initState,
-  ActionFunction,
+  ActionFunction as AF,
   RunState
 } from "./state";
 
 import { resumeAsUser } from "./opr-login";
 
-export type ActionFunction<State, A = void> = (s: State, a: A) => State;
-export type AsyncActionFunction<State> = (s: State) => Promise<State>;
+export type ActionFunction = AF<RunState>;
 
 export const program = cmds;
 const actions: ActionFunction[] = [ resumeAsUser ];
+
 
 export function enqueueCommand(args: object, options: object, logger: CaporalLogger, command: ActionFunction): void {
   actions.push(initState(args, options, logger));
@@ -28,8 +28,9 @@ export function runCommands(): void {
   const accum: RunState = {};
 
   const chain = _.chain(actions).reduce((acc, action) => {
-    // console.log("current acc", accum);
-    return acc.then(action(accum))
+    // console.log("current acc/action", acc, action);
+    // console.log("current accum", accum);
+    return acc.then(() => action(accum))
       .catch(err => {
         console.log("error: ", err);
       }) ;

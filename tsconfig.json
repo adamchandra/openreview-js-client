@@ -22,7 +22,7 @@
     "inlineSourceMap": true,
     "preserveConstEnums": true,
 
-    "diagnostics": true,
+    "diagnostics": false,
 
     "incremental": true,
 

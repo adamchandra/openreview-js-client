@@ -1,12 +1,12 @@
-import cmds from 'caporal';
-import _ from 'lodash';
+import cmds from "caporal";
+import _ from "lodash";
 
 cmds.parse(process.argv);
 
-console.log('hello, info');
+console.log("hello, info");
 
 
 // cmds.
-//   command('info', 'show system information')
-//   .option('-c, --corpus <path>', 'corpus root path', asFile)
+//   command("info", "show system information")
+//   .option("-c, --corpus <path>", "corpus root path", asFile)
 // ;

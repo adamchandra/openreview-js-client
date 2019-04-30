@@ -899,7 +899,7 @@ describe('Search', function () {
   });
 
   it('should delete the second sub note', function (done) {
-    // ACS: why is deleting a note done vis /post
+    // ACS: why is deleting a note done via /post
 
     chai.request(server)
     .post('/notes')

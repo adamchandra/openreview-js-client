@@ -25,10 +25,11 @@ export interface RunState {
 }
 
 
-export type ActionResult = PromiseLike<any | void> | any | void;
-export type ActionFunction = (s: RunState) => ActionResult;
+// export type ActionResult = PromiseLike<any | void> | any | void;
+// export type ActionFunction = (s: RunState) => ActionResult;
+export type ActionFunction<State> = (s: State) => Promise<void>;
 
-export function initState(args: object, options: object, logger: CaporalLogger): ActionFunction {
+export function initState(args: object, options: object, logger: CaporalLogger): ActionFunction<RunState> {
   return (state: RunState) => {
     return new Promise((resolve) => {
       state.args = args;
