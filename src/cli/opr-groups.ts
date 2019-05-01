@@ -76,7 +76,15 @@ program
   });
 
 program
-  .command("groups showtree", "").alias("gtree")
+  .command("groups tree", "").alias("gtree")
   .action((a, o, l) => {
     enqueueCommand(a, o, l, showGroupTree);
   });
+
+program
+  .command("groups show", "").alias("gshow")
+  .action((a, o, l) => {
+    // enqueueCommand(a, o, l, showGroupTree);
+  });
+
+// (this is a session test)

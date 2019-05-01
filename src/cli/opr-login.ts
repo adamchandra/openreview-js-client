@@ -1,6 +1,7 @@
 
 import fs from "fs-extra";
 import * as inquirer from "inquirer";
+import { program, enqueueCommand } from ".";
 
 import {
   Answers,
@@ -16,6 +17,14 @@ export interface UserPassword {
   id: string;
   password: string;
 }
+
+program
+  .command("login", "login to server")
+  .argument("[user]", "login specified user", /.*/, "OpenReview.net")
+  .action((a, o, l) => {
+    enqueueCommand(a, o, l, doLogin);
+  })
+;
 
 export async function doLogin(runState: RunState): Promise<void> {
   const userPass = await askUserPass();
@@ -74,4 +83,6 @@ export async function resumeAsUser(runState: RunState): Promise<void> {
   }
   return Promise.resolve();
 }
+
+
 

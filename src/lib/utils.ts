@@ -4,8 +4,12 @@ export function pp(a: any): string {
   return JSON.stringify(a, undefined, 2);
 }
 
+export function prettyPrint(a: any) {
+  return JSON.stringify(a, undefined, 2);
+}
+
 export function range(val: string): [number, number] {
-  const [start, len] = val.split('-').map(Number);
+  const [start, len] = val.split("-").map(Number);
   return [start, len];
 }
 
@@ -33,7 +37,7 @@ export function range(val: string): [number, number] {
 // export function choice(s: string, opts: object = {}): any  {
 //   return { name: s, ...opts };
 
-  // it('demo checkboxes', function(done) {
+  // it("demo checkboxes", function(done) {
   //   const prompt = inquirer.createPromptModule();
   //   const query = prompt([
   //     {
@@ -70,7 +74,7 @@ export function range(val: string): [number, number] {
 
   // });
 
-  // it('demo passwords', function(done) {
+  // it("demo passwords", function(done) {
   //   const prompt = inquirer.createPromptModule();
   //   const query = prompt([
   //     {
