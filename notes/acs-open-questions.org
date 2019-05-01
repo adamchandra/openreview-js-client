@@ -1,0 +1,16 @@
+* Overview notes
+
+ 
+** Open Questions
+
+*** please explain the '~' group
+*** testUser is able to create note in response to an invitation for which they are a reader, then what is invitees used for?
+*** is the inclusion of unchanging fields required, e.g., invitation, signatures, writer, etc. are same as original 
+*** why is deleting a note done via /post
+*** I don't understand this forum deletion via post /notes
+*** why is the the invitation super field specified explicitly? isn't it just hierarchical, e.g., 'group/-/inv1/inv2/inv3' ?
+*** super/sub invite fields have some overridable fields, others are immutable, correct?
+*** what is invitation.reply.referenti?
+*** invitation format: groupname/-/forumid?
+
+*** Group permissions: tdate, cdate, etc...
