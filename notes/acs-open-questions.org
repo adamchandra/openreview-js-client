@@ -1,16 +1,125 @@
 * Overview notes
 
- 
-** Open Questions
 
-*** please explain the '~' group
+** Questions
+
+*** What is the '~' group
+    Looks like 'everyone', but there is also an (everyone) group
 *** testUser is able to create note in response to an invitation for which they are a reader, then what is invitees used for?
-*** is the inclusion of unchanging fields required, e.g., invitation, signatures, writer, etc. are same as original 
-*** why is deleting a note done via /post
-*** I don't understand this forum deletion via post /notes
+*** is the inclusion of unchanging fields required, e.g., invitation, signatures, writer, etc. are same as original
+*** why is deleting a note done via POST (not DELETE)?
+    b/c "delete" is reversible if in error
+*** I don't understand the process of forum deletion via POST /notes
+    just the subtree
+
 *** why is the the invitation super field specified explicitly? isn't it just hierarchical, e.g., 'group/-/inv1/inv2/inv3' ?
+
 *** super/sub invite fields have some overridable fields, others are immutable, correct?
+
 *** what is invitation.reply.referenti?
-*** invitation format: groupname/-/forumid?
+    (unused)
+
+*** 'XX-YY' groups? are these invitations? invitation format: groupname/-/forumid?
 
 *** Group permissions: tdate, cdate, etc...
+
+
+
+** Question and notes from reading openreview-scripts code
+
+*** Process functions
+    Run on certain events
+    - comment/revision submitted
+    Generate emails to the appropriate recipients
+    Add/remove users from chair groups: */*Chairs/Declined <-> */*Chairs
+
+
+** Group Properties
+*** Readers
+*** Writers
+*** Signatures
+    Any created entity (note, group, invitation) is 'signed' by one (or more?) groups/users,
+    which (???) tracks responsibility for its existence??
+
+
+
+** Steps to get reviewer unassignment w/o extra group creation working
+
+*** Go through mock paper submission, review period, reviewer assignment, then unassign
+    - try unassigning before and after a review has been created (e.g., inept reviewer)
+
+    - [ ] Create new conference
+        - create groups for: org (cv-foundation.org), conference (CVPR), year (2018), event (Workshop)
+          - tools.build_groups() creates group classes
+          - tools.post_group_parents handles posting new groups (although perhaps deprecated?)
+        - create groups for: Chairs, reviewers
+        - create invitation for Submission
+        - maybe create /Admin group?
+
+
+
+** unit testing /groups /notes
+
+
+
+* Reviewer assign/unassign using only one group membership
+
+** How to populate drop-down list with my signatures when submitting review
+** How to display either Anon#Hash and/or Explicit name in UI based on permissions of requesting user
+** How/when to generate the anonymous name w/ hash value
+
+   
+* General coding suggestions
+** linting and autoformatting
+   settle on a code formatting standard
+
+
+
+** Add ~Adam0 to Conf/Reviewers group
+
+*** Possible solutions:
+    
+**** Add a 'flag' to the GET function for 
+     get /groups?invitees=Paper21/Reviewers#.*
+     
+
+
+
+**** Allow signatory to be a function
+     map (group-with-function, user, thing-to-be-signed) => Option(Signature (string))
+     - Conf/Reviewers {
+     -  members: ['~ASaunders0']
+     -  signatories: ['anonymizeUser()']
+
+**** Allow signatory to be 'qualified' by a group, e.g.,
+     - paper23/Reviewers {
+     -   members: ['@/Reviewers/~ASaunders0']
+
+     Where '@' is a path shortcut to root group in conf
+
+     
+
+
+
+**** (NIXED) Extend the process function system to be a more general event handler system
+***** Events are: create, update, groups+add/remove member, invitation+replyTo
+
+***** Tasks
+****** In openreview
+       - [ ] post/update groups/notes/invites with handler function
+         - [ ] add on group/addmember
+
+       - [ ] extend process module to handle named callbacks
+         - how to get return value/side effect from handlers? ('message' handlers via IPC)
+
+       - [ ] extend or3client to create/delete groups
+         - should or3client be the reference implementation for the REST api? should it be 
+           tested against the python client? or vice-versa?
+
+****** In openreview_scripts
+       - [ ] Add handler functions to openreview_scripts
+       - [ ] Generate a new conference and test the init scripts
+
+****** In openreview_py
+       - [ ] create py version of or3client (are they identical?)
+

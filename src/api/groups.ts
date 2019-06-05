@@ -1,7 +1,6 @@
-
 import _ from "lodash";
 
-import { prettyPrint } from "../lib/utils";
+// import { prettyPrint } from "../lib/utils";
 import { RunState } from "../cli/state";
 import { configAxios } from ".";
 import { AxiosError } from "axios";

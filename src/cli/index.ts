@@ -1,4 +1,6 @@
 import cmds from "caporal";
+export const program = cmds;
+
 import _ from "lodash";
 
 import {
@@ -8,11 +10,11 @@ import {
   RunState
 } from "./state";
 
+
 import { resumeAsUser } from "./opr-login";
 
 export type ActionFunction = AF<RunState>;
 
-export const program = cmds;
 const actions: ActionFunction[] = [ resumeAsUser ];
 
 

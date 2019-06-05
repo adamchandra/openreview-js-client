@@ -1,6 +1,8 @@
 //
 
 import { program, enqueueCommand } from ".";
+import { RunState } from "./state";
+import { prettyPrint } from "../lib/utils";
 
 program
   .command("db reset", "reset database to named snapshot")
@@ -11,5 +13,7 @@ program
 ;
 
 async function resetDatabase(runState: RunState): Promise<void> {
-
+  const log = runState.logger!;
+  const args = runState.args!;
+  log.info(`resetDatabase ${prettyPrint(args)}`);
 }
