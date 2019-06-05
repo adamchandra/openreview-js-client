@@ -17,7 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/inquirer": "^6.0.1",
-    "aspectjs": "^2.0.4",
     "axios": "^0.18.0",
     "caporal": "^1.1.0",
     "commander": "^2.20.0",

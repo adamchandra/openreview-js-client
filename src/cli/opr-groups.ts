@@ -4,7 +4,7 @@ import _ from "lodash";
 import {
   listGroups,
   createGroup,
-  deleteGroup,
+  // deleteGroup,
   showGroupTree,
   // GroupPermissions
 } from "../api/groups";
