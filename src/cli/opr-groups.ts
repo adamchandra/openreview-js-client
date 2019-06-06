@@ -4,8 +4,10 @@ import _ from "lodash";
 import {
   listGroups,
   createGroup,
-  // deleteGroup,
   showGroupTree,
+  showInvitationTree,
+  showNoteTree,
+  showTagTree,
   // GroupPermissions
 } from "../api/groups";
 
@@ -76,15 +78,26 @@ program
   });
 
 program
-  .command("groups tree", "").alias("gtree")
+  .command("groups show", "").alias("gshow")
   .action((a, o, l) => {
     enqueueCommand(a, o, l, showGroupTree);
   });
 
 program
-  .command("groups show", "").alias("gshow")
+  .command("invites show", "")
   .action((a, o, l) => {
-    // enqueueCommand(a, o, l, showGroupTree);
+    enqueueCommand(a, o, l, showInvitationTree);
   });
 
-// (this is a session test)
+
+program
+  .command("notes show", "")
+  .action((a, o, l) => {
+    enqueueCommand(a, o, l, showNoteTree);
+  });
+
+program
+  .command("tags show", "")
+  .action((a, o, l) => {
+    enqueueCommand(a, o, l, showTagTree);
+  });

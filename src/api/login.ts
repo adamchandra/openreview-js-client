@@ -46,8 +46,8 @@ export interface Credentials {
 
 export async function postLogin(id: string, password: string): Promise<Credentials> {
   return axios
-    .post('http://localhost:3000/login', {id, password})
-    .then(r => r.data)
+    .post("http://localhost:3000/login", {id, password})
+    .then(r => r.data);
 }
 
 

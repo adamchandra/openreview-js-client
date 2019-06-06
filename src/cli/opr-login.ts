@@ -2,6 +2,9 @@
 import fs from "fs-extra";
 import * as inquirer from "inquirer";
 import { program, enqueueCommand } from ".";
+import { prettyPrint } from "../lib/utils";
+
+import _ from "lodash";
 
 import {
   Answers,
@@ -18,6 +21,11 @@ export interface UserPassword {
   password: string;
 }
 
+export interface ActiveCredentials {
+  credentials: Credentials[];
+  defaultLogin?: string;
+}
+
 program
   .command("login", "login to server")
   .argument("[user]", "login specified user", /.*/, "OpenReview.net")
@@ -29,6 +37,7 @@ program
 export async function doLogin(runState: RunState): Promise<void> {
   const userPass = await askUserPass();
   const log = runState.logger!;
+
   return postLogin(userPass.id, userPass.password)
     .then (creds => {
       writeCreds(creds);
@@ -72,17 +81,28 @@ export async function askUserPass(): Promise<UserPassword> {
 const credentialsFilename = "./user-credentials.json";
 
 export function writeCreds(creds: Credentials): void {
-  fs.writeJsonSync(credentialsFilename, creds);
+  let activeCredentials: ActiveCredentials = {
+    credentials: []
+  };
+  if (fs.existsSync(credentialsFilename)) {
+    activeCredentials = fs.readJsonSync(credentialsFilename);
+  }
+
+  _.remove(activeCredentials.credentials, creds.user.id);
+  activeCredentials.credentials.push(creds);
+  activeCredentials.defaultLogin = creds.user.id;
+
+  fs.writeJsonSync(credentialsFilename, activeCredentials);
 }
 
 
 export async function resumeAsUser(runState: RunState): Promise<void> {
   if (fs.existsSync(credentialsFilename)) {
-    const creds = fs.readJsonSync(credentialsFilename);
-    runState.credentials = creds;
+    const activeCredentials: ActiveCredentials = fs.readJsonSync(credentialsFilename);
+    // console.log(`resumeAsUser(): ${prettyPrint(activeCredentials)}`);
+    const activeUser = activeCredentials.defaultLogin!;
+    const activeCreds = _.find(activeCredentials.credentials, (c) => c.user.id === activeUser);
+    runState.credentials = activeCreds;
   }
   return Promise.resolve();
 }
-
-
-
